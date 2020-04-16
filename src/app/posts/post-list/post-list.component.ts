@@ -7,9 +7,8 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.css']
+  styleUrls: ['./post-list.component.css'],
 })
-
 export class PostListComponent implements OnInit, OnDestroy {
   // posts = [
   //   { title: "First Post", content: "This is the first post's content" },
@@ -19,13 +18,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   private postSub: Subscription;
 
-  constructor(public postsService: PostService) {
-
-  }
+  constructor(public postsService: PostService) {}
 
   ngOnInit() {
     this.postsService.getPosts();
-    this.postSub = this.postsService.getPostUpdateListener()
+    this.postSub = this.postsService
+      .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
       });
@@ -35,4 +33,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postSub.unsubscribe();
   }
 
+  onDelete(postId: string) {
+    this.postsService.deletePost(postId);
+  }
 }
