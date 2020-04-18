@@ -29,7 +29,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
-  let fetechedUser;
+  let fetchedUser;
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -37,7 +37,7 @@ router.post("/login", (req, res, next) => {
           message: "email not found",
         });
       }
-      fetechedUser = user;
+      fetchedUser = user;
       return bcrypt.compare(req.body.password, user.password);
     })
     .then((result) => {
@@ -47,13 +47,14 @@ router.post("/login", (req, res, next) => {
         });
       }
       const token = jwt.sign(
-        { email: fetechedUser.email, userId: fetechedUser._id },
+        { email: fetchedUser.email, userId: fetchedUser._id },
         "should-be-long-string",
         { expiresIn: "1hr" }
       );
       res.status(200).json({
         token: token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userId: fetchedUser._id,
       });
     })
     .catch((err) => {
